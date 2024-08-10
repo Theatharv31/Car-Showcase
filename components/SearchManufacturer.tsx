@@ -1,24 +1,35 @@
 "use client";
-import { Combobox, Transition } from '@headlessui/react'
-import { SearchManufacturerProps } from '@/types'
-import React from 'react'
 import Image from 'next/image';
 import { useState, Fragment } from 'react';
+import { Combobox, Transition } from '@headlessui/react';
 import { manufacturers } from '@/constants';
+import { SearchManufacturerProps } from '@/types';
 
-const SearchManufacturer = ({manufacturer, setManufacturer} : SearchManufacturerProps) => {
-    const [query, setQuery] = useState('');
 
-    // Filter operation for ComboBox
-    const filteredManufacturers = 
-    query === "" ? manufacturers : manufacturers.filter((item) => (
-        item.toLowerCase()
-        .replace(/\s+/g, "")
-        .includes(query.toLowerCase().replace(/\s+/g, ""))
-    ))
+
+
+const SearchManufacturer = ({
+  selected,
+  setSelected,
+}: SearchManufacturerProps) => {
+  const [query, setQuery] = useState(""); // State for storing the search query
+
+  // Filter the manufacturers based on the search query
+  const filteredManufacturers =
+    query === "" // If the search query is empty
+      ? manufacturers // Return all manufacturers
+      : manufacturers.filter(
+          (
+            item // return manufacturer that includes query value
+          ) =>
+            item
+              .toLowerCase() // convert manufacturer name to lowercase
+              .replace(/\s+/g, "") // remove whitespace from manufacturer name
+              .includes(query.toLowerCase().replace(/\s+/g, "")) // check if the manufacturer name includes the search query
+        );
   return (
     <div className='search-manufacturer'>
-        <Combobox value={manufacturer} onChange={setManufacturer}>
+        <Combobox value={selected} onChange={setSelected}>
             <div className='relative w-full'>
                 <Combobox.Button className="absolute top-[14px]">
                     <Image src ="/car-logo.svg"
@@ -28,7 +39,7 @@ const SearchManufacturer = ({manufacturer, setManufacturer} : SearchManufacturer
                     alt="carlogo" />
                 </Combobox.Button>
                 <Combobox.Input className="search-manufacturer__input"
-                placeholder='volkswagen'
+                placeholder='volkswagen...'
                 displayValue={(manufacturer: string) => manufacturer}
                 //evernt handeling taking input from combobox and save state variable setQuery
                 onChange={(e) => setQuery(e.target.value)}
